@@ -9,5 +9,5 @@ import java.util.*;
 public interface PlaceRepository extends JpaRepository<Place, Integer> {
     Place findByPlaceCode(String code);
     Place findByPlaceName(String name);
-    Page<Place> findAll(Pageable pageable);
+    //Page<Place> findAll(Pageable pageable);
 }

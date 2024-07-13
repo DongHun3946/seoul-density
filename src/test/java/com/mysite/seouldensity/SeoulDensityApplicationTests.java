@@ -16,10 +16,11 @@ class SeoulDensityApplicationTests {
 
 	@Test
 	void contextLoads() {
-		Optional<Place> oq = this.placeRepository.findById(3);
-		assertTrue(oq.isPresent());
-		Place p = oq.get();
-		p.setImagePath("/images/광화문·덕수궁.jpg");
+		Place p = new Place();
+		p.setPlaceName("창덕궁·종묘");
+		p.setPlaceCode("POI012");
+		p.setCategory("고궁·문화유산");
+		p.setImagePath("/images/창덕궁·종묘.jpg");
 		this.placeRepository.save(p);
 	}
 }
