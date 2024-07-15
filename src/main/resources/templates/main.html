@@ -3,40 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>장소 목록</title>
+    <title>SeoulDensity</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        .place-card {
+            text-align: center;
+            margin-bottom: 20px;
+        }
         .place-image {
-            width: 300px;
-            height: 300px;
+            width: 100%;
+            height: 200px;
             object-fit: cover; /* 이미지가 비율을 유지하면서 박스에 맞춰집니다. */
+        }
+        .place-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .table td {
+            vertical-align: middle;
         }
     </style>
 </head>
 <body>
+<!-- 네비게이션 바 -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">서울시 주요 장소</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="user/login">로그인</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/user/signup}">회 원 가 입</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- 콘텐츠 -->
 <div class="container">
-    <table class="table">
-        <thead>
-        <tr>
-            <th>장소</th>
-            <th>이미지</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="place, index : ${placeList}">
-            <td>
-                <a th:href="@{|/seoulDensity/detail/${place.id}|}" th:text="${place.placeName}"></a>
-            </td>
-            <td>
+    <h1 class="text-center my-4">실시간 장소 혼잡도</h1>
+    <div class="row">
+        <div class="col-md-4" th:each="place, loop : ${paging}">
+            <div class="place-card">
                 <img th:src="@{${place.imagePath}}" alt="이미지" class="place-image"/>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+                <p class="place-name">
+                    <a th:href="@{|/seoulDensity/detail/${place.id}|}" th:text="${place.placeName}"></a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <!-- 페 이 징 처 리 시 작 -->
+    <div th:if="${!paging.isEmpty()}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{|?page=${paging.number-1}|}">
+                    <span>이 전</span>
+                </a>
+            </li>
+            <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
+                th:if="${page >= paging.number-5 and page <= paging.number+5}"
+                th:classappend="${page == paging.number} ? 'active'"
+                class="page-item">
+                <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}">
+                </a>
+            </li>
+            <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+                <a class="page-link" th:href="@{|?page=${paging.number+1}|}">
+                    <span>다 음</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <!-- 페 이 징 처 리 끝 -->
 </div>
+
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
-
