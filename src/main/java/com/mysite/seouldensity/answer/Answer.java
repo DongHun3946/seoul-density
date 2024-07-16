@@ -1,6 +1,7 @@
 package com.mysite.seouldensity.answer;
 
 import com.mysite.seouldensity.place.Place;
+import com.mysite.seouldensity.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,4 +27,7 @@ public class Answer {
 
     @ManyToOne
     private Place place;
+
+    @ManyToOne
+    private User author;
 }
