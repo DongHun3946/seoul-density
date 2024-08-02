@@ -16,12 +16,10 @@ class SeoulDensityApplicationTests {
 
 	@Test
 	void contextLoads() {
-		Place p = new Place();
-		p.setPlaceName("창덕궁·종묘");
-		p.setPlaceCode("POI012");
-		p.setCategory("고궁·문화유산");
-		p.setImagePath("/images/창덕궁·종묘.jpg");
-		this.placeRepository.save(p);
+		Optional<Place> oa = this.placeRepository.findById(63);
+		assertTrue(oa.isPresent());
+		Place q = oa.get();
+		this.placeRepository.delete(q);
 	}
 }
 
@@ -31,6 +29,7 @@ Place p = new Place();
 p.setPlaceCode("POI009");
 p.setPlaceName("광화문·덕수궁");
 p.setCategory("고궁·문화유산");
+p.setImagePath("/images/광나루한강공원.jpg");
 this.placeRepository.save(p);
 ---------------------------
 

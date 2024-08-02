@@ -20,7 +20,11 @@ public class PlaceController {
     @GetMapping("/list")
     public String list(Model model, @RequestParam(value="page", defaultValue = "0") int page){
         Page<Place> paging = this.placeService.getList(page);
+        List<Place> places = paging.getContent();
+        Map<String, String> placePopulations = placeService.getPlacePopulation(places);
+
         model.addAttribute("paging", paging);
+        model.addAttribute("placePopulations", placePopulations);
         return "main";
     }
     @GetMapping(value="/detail/{id}")

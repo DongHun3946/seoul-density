@@ -6,22 +6,67 @@
     <title>SeoulDensity</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        .navbar-brand {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #007bff; /* 파란색으로 강조 */
+        }
+        .navbar-brand:hover {
+            color: #0056b3; /* 호버시 색상 변경 */
+        }
+        .page-title {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+            margin-top: 20px;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #007bff; /* 밑줄 */
+            display: inline-block;
+            padding-bottom: 10px;
+        }
         .place-card {
             text-align: center;
             margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         .place-image {
             width: 100%;
             height: 200px;
-            object-fit: cover; /* 이미지가 비율을 유지하면서 박스에 맞춰집니다. */
+            object-fit: cover;
         }
         .place-name {
             font-size: 1.2em;
             font-weight: bold;
-            margin-top: 15px;
+            margin: 15px 0;
         }
         .table td {
             vertical-align: middle;
+        }
+        .congestion-status {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            color: white;
+            border: 1px solid rgba(0, 0, 0, 0.1); /* 살짝 두드러지는 경계 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* 입체감을 위한 그림자 */
+            margin-bottom: 6px; /* 위 요소들과의 간격 */
+        }
+        .congestion-high {
+            background-color: #f14545;
+        }
+        .congestion-medium {
+            background-color: #f5ab25;
+        }
+        .congestion-normal {
+            background-color: #eaea1d;
+            color: black;
+        }
+        .congestion-low {
+            background-color: #5cd55c;
         }
     </style>
 </head>
@@ -36,10 +81,10 @@
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a>
-                <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로 그 아 웃</a>
+                <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:href="@{/user/signup}">회 원 가 입</a>
+                <a class="nav-link" th:href="@{/user/signup}">회원가입</a>
             </li>
         </ul>
     </div>
@@ -47,7 +92,7 @@
 
 <!-- 콘텐츠 -->
 <div class="container">
-    <h1 class="text-center my-4">실시간 장소 혼잡도</h1>
+    <h1 class="text-center page-title">실시간 장소 혼잡도</h1>
     <div class="row">
         <div class="col-md-4" th:each="place, loop : ${paging}">
             <div class="place-card">
@@ -55,16 +100,25 @@
                 <p class="place-name">
                     <a th:href="@{|/seoulDensity/detail/${place.id}|}" th:text="${place.placeName}"></a>
                 </p>
+                <div th:if="${placePopulations[place.placeName]} != null">
+                    <span th:text="${placePopulations[place.placeName]}"
+                          th:class="'congestion-status ' +
+                                    (${placePopulations[place.placeName]} == '붐빔' ? 'congestion-high' : '') +
+                                    (${placePopulations[place.placeName]} == '약간 붐빔' ? 'congestion-medium' : '') +
+                                    (${placePopulations[place.placeName]} == '보통' ? 'congestion-normal' : '') +
+                                    (${placePopulations[place.placeName]} == '여유' ? 'congestion-low' : '')">
+                    </span>
+                </div>
             </div>
         </div>
     </div>
-    <!-- 페 이 징 처 리 시 작 -->
+    <!-- 페이징 처리 시작 -->
     <div th:if="${!paging.isEmpty()}">
         <ul class="pagination justify-content-center">
             <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
                 <a class="page-link"
                    th:href="@{|?page=${paging.number-1}|}">
-                    <span>이 전</span>
+                    <span>이전</span>
                 </a>
             </li>
             <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
@@ -76,12 +130,12 @@
             </li>
             <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
                 <a class="page-link" th:href="@{|?page=${paging.number+1}|}">
-                    <span>다 음</span>
+                    <span>다음</span>
                 </a>
             </li>
         </ul>
     </div>
-    <!-- 페 이 징 처 리 끝 -->
+    <!-- 페이징 처리 끝 -->
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
