@@ -9,5 +9,4 @@ public class SeoulDensityApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SeoulDensityApplication.class, args);
 	}
-
 }

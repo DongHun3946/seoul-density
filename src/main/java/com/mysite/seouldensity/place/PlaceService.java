@@ -22,12 +22,14 @@ public class PlaceService {
     private final PlaceRepository placeRepository;
     private final RestTemplate restTemplate;
 
+
     //해당 apiUrl 로 요청을 보내고 응답으로 받은 xml 문자열을 String으로 반환
     public String getSeoulApi(String apiUrl){
         return restTemplate.getForObject(apiUrl, String.class);
     }
 
     public Map<String, String> getPlacePopulation(List<Place> places){
+        long startTime = System.currentTimeMillis();
         Map<String, String> placePopulations = new HashMap<>();
         for (Place place : places) {
             String apiUrl = "http://openapi.seoul.go.kr:8088/70426e487a6133393130336945645a66/xml/citydata/1/5/" + place.getPlaceName();
@@ -35,6 +37,8 @@ public class PlaceService {
             String populationStatus = extractPopulationStatus(apiData); // populationStatus = AREA_CONGEST_LVL 값을 추출한 값
             placePopulations.put(place.getPlaceName(), populationStatus); // ("서울대공원", "붐빔") 형태로 저장
         }
+        long stopTime = System.currentTimeMillis();
+        System.out.println("API 호출 지연시간 : " + (stopTime - startTime) + "ms");
         return placePopulations;
     }
 

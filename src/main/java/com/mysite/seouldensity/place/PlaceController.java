@@ -22,7 +22,6 @@ public class PlaceController {
         Page<Place> paging = this.placeService.getList(page);
         List<Place> places = paging.getContent();
         Map<String, String> placePopulations = placeService.getPlacePopulation(places);
-
         model.addAttribute("paging", paging);
         model.addAttribute("placePopulations", placePopulations);
         return "main";
