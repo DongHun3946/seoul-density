@@ -3,6 +3,8 @@ package com.mysite.seouldensity;
 import java.util.Optional;
 import com.mysite.seouldensity.place.Place;
 import com.mysite.seouldensity.place.PlaceRepository;
+import com.mysite.seouldensity.answer.Answer;
+import com.mysite.seouldensity.answer.AnswerRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,12 +16,14 @@ class SeoulDensityApplicationTests {
 	@Autowired
 	private PlaceRepository placeRepository;
 
+	@Autowired
+	private AnswerRepository answerRepository;
 	@Test
 	void contextLoads() {
-		Optional<Place> oa = this.placeRepository.findById(63);
+		Optional<Answer> oa = this.answerRepository.findById(8);
 		assertTrue(oa.isPresent());
-		Place q = oa.get();
-		this.placeRepository.delete(q);
+		Answer a = oa.get();
+		this.answerRepository.delete(a);
 	}
 }
 

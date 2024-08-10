@@ -1,6 +1,8 @@
 package com.mysite.seouldensity.place;
 import com.mysite.seouldensity.answer.Answer;
 import java.util.*;
+
+import com.mysite.seouldensity.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,4 +31,5 @@ public class Place {
 
     @OneToMany(mappedBy = "place", cascade = CascadeType.REMOVE)
     private List<Answer> answerList;
+
 }

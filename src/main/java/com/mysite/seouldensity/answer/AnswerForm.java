@@ -3,8 +3,9 @@ package com.mysite.seouldensity.answer;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
-@Setter
+
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

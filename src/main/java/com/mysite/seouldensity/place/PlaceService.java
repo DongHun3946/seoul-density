@@ -7,7 +7,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import com.mysite.seouldensity.DataNotFoundException;
 import org.springframework.web.client.RestTemplate;
-
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.util.*;
@@ -30,15 +33,25 @@ public class PlaceService {
 
     public Map<String, String> getPlacePopulation(List<Place> places){
         long startTime = System.currentTimeMillis();
-        Map<String, String> placePopulations = new HashMap<>();
+        Map<String, String> placePopulations = new ConcurrentHashMap<>();
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
         for (Place place : places) {
-            String apiUrl = "http://openapi.seoul.go.kr:8088/70426e487a6133393130336945645a66/xml/citydata/1/5/" + place.getPlaceName();
-            String apiData = getSeoulApi(apiUrl); //apiData = 응답으로 받은 문자열
-            String populationStatus = extractPopulationStatus(apiData); // populationStatus = AREA_CONGEST_LVL 값을 추출한 값
-            placePopulations.put(place.getPlaceName(), populationStatus); // ("서울대공원", "붐빔") 형태로 저장
+            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+                String apiUrl = "http://openapi.seoul.go.kr:8088/70426e487a6133393130336945645a66/xml/citydata/1/5/" + place.getPlaceName();
+                String apiData = getSeoulApi(apiUrl); //apiData = 응답으로 받은 문자열
+                String populationStatus = extractPopulationStatus(apiData); // populationStatus = AREA_CONGEST_LVL 값을 추출한 값
+                placePopulations.put(place.getPlaceName(), populationStatus); // ("서울대공원", "붐빔") 형태로 저장
+            }, executorService);
+            futures.add(future);
         }
+
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+
         long stopTime = System.currentTimeMillis();
         System.out.println("API 호출 지연시간 : " + (stopTime - startTime) + "ms");
+        executorService.shutdown();
         return placePopulations;
     }
 
