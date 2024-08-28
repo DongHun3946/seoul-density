@@ -17,6 +17,8 @@
 - WS/WAS : Tomcat
 ## 📝 프로젝트 아키텍쳐
 ![image](https://github.com/user-attachments/assets/ee4cba42-a94f-4e98-a6ab-993712b66118)
+## 📝 메인화면
+![image](https://github.com/user-attachments/assets/55484acd-ea4f-450e-8645-c9bb1859ec1f)
 ## 📌 주요 기능
 - 장소별 인구 혼잡도 정보 제공
 - 장소 검색
