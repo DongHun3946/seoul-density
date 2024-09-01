@@ -25,6 +25,6 @@
 - 장소별 댓글 등록
 ## 📌 배운점
 - RestTemplate을 활용하여 API를 호출하는 방식
-- RestTemplate 은 동기식으로 처리하여 API를 호출하는데 42ms나 걸리지만 각 스레드마다 비동기식으로 처리하는 CompletableFuture 를 사용하여 호출시간을 4~7ms로 줄일 수 있었다. 
+- RestTemplate 은 동기식으로 처리하여 API를 호출하는데 길면 42초나 걸리지만 각 스레드마다 비동기식으로 처리하는 CompletableFuture 를 사용하여 호출시간을 4~7초로 줄일 수 있었다. 
 ## ✒️ API
 - 사용한 API : <https://data.seoul.go.kr/dataList/OA-21778/A/1/datasetView.do>
